@@ -11,7 +11,7 @@ Capstone Design - Kyung Hee University SWCON
 
 ### 1. 가속도 & 자이로 손목 트래커 2개
 
- > 센서
+ > **센서**
  - Wemos D1 mini 2개
  - mpu6050 (가속도 & 자이로 센서) 2개
  - TP4056 (c-type 충전 포트) 2개
@@ -19,10 +19,12 @@ Capstone Design - Kyung Hee University SWCON
 
  - 회로도<br>
 <img src="./Image/mpu6050.JPG" width = 300 height = 400>
+
 ***
+
 ### 2. 충격 감지 센서 1개
 
- >센서
+ > **센서**
  - Wemos D1 mini 1개
  - Sw420 (충격 감지 센서) 1개
  - TP4056 (c-type 충전 포트) 1개
@@ -30,8 +32,10 @@ Capstone Design - Kyung Hee University SWCON
  - 회로도 <br>
  <img src="./Image/sw420.JPG" width = 300 height = 400>
 
+***
+
 ### 3. 낙전 감지 센서 1개 (필수 아님!)
- > 센서
+ > **센서**
  - Wemos D1 mini 1개
  - 적외선 트레이서 1개
 
