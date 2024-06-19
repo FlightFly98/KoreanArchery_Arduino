@@ -53,6 +53,16 @@ Capstone Design - Kyung Hee University SWCON
 
 4. 낙전 감지 센서에 Nakjeon을 업로드합니다.
 
+5. 케이스: Case 폴더에 3D프린트 도면 있습니다!<br>
+
+- Mpu6050 body,Cover,Pane 각 2개씩
+
+- Sw420 1개
+
+- 전체 도면 사진
+
+ <img src="./Image/casePicture.png" width = 600 height = 400>
+
 ### 2) 와이파이 설정 - 아두이노
 
 #### 1. mpu6050_ZoomHand의 전원을 킵니다. <br>
@@ -90,4 +100,7 @@ def get_ip_address():
  - 12348 포트는 코드에는 있지만 아직 개발중입니다. 연결이 안되는 것이 정상입니다.
 
 #### 6. 모두 연결이 되었다면 아두이노는 준비 완료!
+
+#### 7. 가속도 & 자이로 센서를 손목에 착용합니다.
+
  다시 돌아가기: https://github.com/FlightFly98/VRKoreanArchery

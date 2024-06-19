@@ -11,7 +11,7 @@ ACK_MESSAGE = b"ACK"
 
 # PowerShell 스크립트를 실행하여 컴퓨터의 Wi-Fi IP 주소를 얻음
 def get_ip_address():
-    result = subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "..\\Server\\GetIP.ps1"], capture_output=True, text=True)
+    result = subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "C:\\Users\\brian\\Documents\\Arduino\\Server\\GetIP.ps1"], capture_output=True, text=True)
     ip_address = result.stdout.strip()
     return ip_address
 
