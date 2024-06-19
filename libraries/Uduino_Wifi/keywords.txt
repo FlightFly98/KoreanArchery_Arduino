@@ -1,0 +1,31 @@
+#######################################
+# Syntax Coloring Map For Uduino_WiFi
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Uduino_Wifi	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+write	KEYWORD2
+println	KEYWORD2
+print	KEYWORD2
+available	KEYWORD2
+update	KEYWORD2
+delay	KEYWORD2
+isConnected	KEYWORD2
+connectWifi	KEYWORD2
+isWifiConnected	KEYWORD2
+useSerial	KEYWORD2
+setPort	KEYWORD2
+setStaticIP	KEYWORD2
+useSendBuffer	KEYWORD2
+setConnectionTries	KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
