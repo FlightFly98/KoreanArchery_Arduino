@@ -97,7 +97,6 @@ def get_ip_address():
  - "..\\Server\\GetIP.ps1" 이 자리에 본인의 GetIP.ps1가 위치한 파일 경로를 넣으셔야 합니다.
  - 모든 아두이노가 연결이 되었는지 확인합니다.
  - "Device at {ip}:{port} is still connected." 또는 "Device at {ip}:{port} reconnected." 메세지가 뜬다면 연결 성공입니다.
- - 12348 포트는 코드에는 있지만 아직 개발중입니다. 연결이 안되는 것이 정상입니다.
 
 #### 6. 모두 연결이 되었다면 아두이노는 준비 완료!
 

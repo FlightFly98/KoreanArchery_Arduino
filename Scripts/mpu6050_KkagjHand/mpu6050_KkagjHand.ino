@@ -2,9 +2,9 @@
 #include <WiFiUdp.h>
 #include <Wire.h>
 
-const char* ssid = "WemosD1_ZoomHand";
+const char* ssid = "Gukgung_Wifi";
 const char* password = "love00007";
-IPAddress local_IP(192, 168, 4, 2);
+IPAddress local_IP(192, 168, 4, 3);
 IPAddress gateway(192, 168, 4, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -35,6 +35,7 @@ void loop() {
   }
 }
 
+
 void setWiFiConnect()
 {
   WiFi.begin(ssid, password);
@@ -47,6 +48,7 @@ void setWiFiConnect()
 
   Serial.println("Connected to WiFi");
 }
+
 
 void initializeMPU6050() 
 {
@@ -104,6 +106,7 @@ void waitForPCIP() {
   }
 }
 
+
 void waitForCheckMessage() 
 {
   int packetSize = Udp.parsePacket();
@@ -134,6 +137,8 @@ void sendSensorData()
 
   // Get Rssi
   int32_t rssi = WiFi.RSSI();
+
+  int fsrValue = analogRead(A0);
   
   // Get Accel
   Wire.beginTransmission(0x68);
@@ -150,8 +155,9 @@ void sendSensorData()
   for(i = 0; i < 3; i++) gyro_raw[i] = (Wire.read() << 8) | Wire.read();
 
   char str[256];
-  snprintf(str, sizeof(str), "RSSI: %d, Accel: %d, %d, %d, Gyro: %d, %d, %d",
+  snprintf(str, sizeof(str), "Rssi: %d, FSR: %d, Accel: %d, %d, %d, Gyro: %d, %d, %d",
   rssi,
+  fsrValue,
   acc_raw[0], acc_raw[1], acc_raw[2],
   gyro_raw[0], gyro_raw[1], gyro_raw[2]);
   

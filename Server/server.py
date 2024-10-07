@@ -13,9 +13,10 @@ ACK_MESSAGE = b"ACK"
 def get_ip_address():
     result = subprocess.run(["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", "..\\Server\\GetIP.ps1"], capture_output=True, text=True)
     ip_address = result.stdout.strip()
-    return ip_address
+    print(f"get_ip_address() returned: {ip_address}")
+    return ip_address if ip_address else None
 
-# PC가 ESP8266의 AP에 연결되었는지 확인
+# PC가 Gukgung_Wifi AP에 연결되었는지 확인
 def is_connected_to_esp_ap(pc_ip):
     try:
         return ip_address(pc_ip) in ESP_SUBNET
@@ -59,29 +60,31 @@ def check_arduino_connections(arduino_devices):
 
 # 메인 함수
 def main():
-    print("Checking connection to ESP8266 AP...")
+    print("Checking connection to Gukgung_Wifi AP...")
     pc_ip = None
     while True:
         pc_ip = get_ip_address()
         if pc_ip:
             print(f"Obtained PC IP: {pc_ip}")
+            # IP 주소의 타입 확인
+            print(f"Type of pc_ip: {type(pc_ip)}")
             if is_connected_to_esp_ap(pc_ip):
-                print("Connected to ESP8266 AP.")
+                print("Connected to Gukgung_Wifi.")
                 print(f"PC IP Address: {pc_ip}")
                 break
             else:
-                print("Not connected to ESP8266 AP. Retrying in 5 seconds...")
+                print("Not connected to Gukgung_Wifi AP. Retrying in 5 seconds...")
         else:
             print("Failed to obtain PC IP. Retrying in 5 seconds...")
         time.sleep(5)
 
     # 아두이노 장치의 IP 주소 및 포트 리스트
     arduino_devices = [
-        {"ip": "192.168.4.1", "port": 12346, "acknowledged": False}, # 줌손, AP
-        {"ip": "192.168.4.2", "port": 12347, "acknowledged": False}, # 깍지손
-        {"ip": "192.168.4.3", "port": 12348, "acknowledged": False}, # 발시 감지 센서
-        {"ip": "192.168.4.4", "port": 12349, "acknowledged": False}, # 낙전 감지 센서
-        {"ip": "192.168.4.5", "port": 12350, "acknowledged": False}, # 충격 감지 센서
+        # {"ip": "192.168.4.1", "port": 12345, "acknowledged": False}, # 낙전 감지 센서
+        {"ip": "192.168.4.2", "port": 12346, "acknowledged": False}, # 줌손, AP
+        {"ip": "192.168.4.3", "port": 12347, "acknowledged": False}, # 깍지손
+        {"ip": "192.168.4.4", "port": 12348, "acknowledged": False}, # 충격 감지 센서
+        # {"ip": "192.168.4.5", "port": 12350, "acknowledged": False}, 
     ]
 
     # 첫 번째 연결 확인 메시지 전송
@@ -91,7 +94,7 @@ def main():
     while True:
         print("Checking connections...")
         check_arduino_connections(arduino_devices)
-        time.sleep(15)  # 15초마다 연결 상태 확인
+        time.sleep(5)  # 15초마다 연결 상태 확인
 
 if __name__ == "__main__":
     main()

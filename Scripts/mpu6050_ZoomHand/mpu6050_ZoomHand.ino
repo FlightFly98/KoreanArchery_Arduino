@@ -2,9 +2,9 @@
 #include <WiFiUdp.h>
 #include <Wire.h>
 
-const char* ssid = "WemosD1_ZoomHand";
+const char* ssid = "Gukgung_Wifi";
 const char* password = "love00007";
-IPAddress local_IP(192, 168, 4, 1);
+IPAddress local_IP(192, 168, 4, 2);
 IPAddress gateway(192, 168, 4, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -16,7 +16,7 @@ bool ipAcquired = false;
 
 void setup() {
   Serial.begin(115200);
-  
+
   setWiFiAp();
   
   Wire.begin(D2, D1);
@@ -42,6 +42,19 @@ void setWiFiAp()
   WiFi.softAP(ssid, password);
   delay(10000); // AP 설정을 위한 시간 대기
   Serial.println("AP mode set");
+}
+
+void setWiFiConnect()
+{
+  WiFi.begin(ssid, password);
+  WiFi.config(local_IP, gateway, subnet);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(2000);
+    Serial.println("Connecting to WiFi...");
+  }
+
+  Serial.println("Connected to WiFi");
 }
 
 void initializeMPU6050() {
@@ -73,6 +86,7 @@ void initializeMPU6050() {
   Wire.endTransmission();
 }
 
+
 void waitForPCIP() {
   int packetSize = Udp.parsePacket();
   if (packetSize) 
@@ -102,6 +116,8 @@ void waitForPCIP() {
   }
 }
 
+
+
 void waitForCheckMessage() 
 {
   int packetSize = Udp.parsePacket();
@@ -123,6 +139,7 @@ void waitForCheckMessage()
     }
   }
 }
+
 
 void sendSensorData() {
   uint8_t i;

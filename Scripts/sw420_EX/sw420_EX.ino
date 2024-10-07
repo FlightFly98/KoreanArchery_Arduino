@@ -1,15 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
-const char* ssid = "WemosD1_ZoomHand";
+const char* ssid = "Gukgung_Wifi";
 const char* password = "love00007";
-IPAddress local_IP(192, 168, 4, 5);
+IPAddress local_IP(192, 168, 4, 4);
 IPAddress gateway(192, 168, 4, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 WiFiUDP Udp;
 IPAddress udpAddress;  // 유니티가 실행되는 PC의 IP 주소
-const int udpPort = 12350;  // SW-420 센서 데이터 전송 포트
+const int udpPort = 12348;  // SW-420 센서 데이터 전송 포트
 bool ipAcquired = false;
 
 const int shockSensorPin = D1;  // SW-420 센서가 연결된 핀
@@ -51,6 +51,7 @@ void sendSensorData()
   }
 }
 
+
 void setWiFiConnect()
 {
   WiFi.begin(ssid, password);
@@ -62,6 +63,8 @@ void setWiFiConnect()
   }
   Serial.println("Connected to WiFi");
 }
+
+
 
 void waitForPCIP() {
   int packetSize = Udp.parsePacket();
@@ -92,6 +95,8 @@ void waitForPCIP() {
   }
 }
 
+
+
 void waitForCheckMessage() 
 {
   int packetSize = Udp.parsePacket();
@@ -113,4 +118,3 @@ void waitForCheckMessage()
     }
   }
 }
-

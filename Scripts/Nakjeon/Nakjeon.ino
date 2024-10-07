@@ -1,15 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
-const char* ssid = "WemosD1_ZoomHand";
+const char* ssid = "Gukgung_Wifi";
 const char* password = "love00007";
-IPAddress local_IP(192, 168, 4, 4);
+IPAddress local_IP(192, 168, 4, 1);
 IPAddress gateway(192, 168, 4, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 WiFiUDP Udp;
 IPAddress udpAddress;  // 유니티가 실행되는 PC의 IP 주소
-const int udpPort = 12349;
+const int udpPort = 12345;
 bool ipAcquired = false;
 
 const int nakSensorPin = D1;
@@ -27,9 +27,10 @@ void setup() {
 void loop() {
   if (!ipAcquired) 
     waitForPCIP();
-  else
+  else {
     sendSensorData();
     waitForCheckMessage();
+  }
 }
 
 void sendSensorData()
@@ -37,7 +38,7 @@ void sendSensorData()
   int nakValue = digitalRead(nakSensorPin);
   char buffer[256];
   if (nakValue == LOW) {
-    // 충격 감지 시 데이터 전송
+    // 센서 감지 시 데이터 전송
     snprintf(buffer, sizeof(buffer), "NakJeon");
     Udp.beginPacket(udpAddress, udpPort);
     Udp.write(buffer);
@@ -75,6 +76,7 @@ void setWiFiConnect()
   Serial.println("Connected to WiFi");
 }
 
+
 void waitForPCIP() {
   int packetSize = Udp.parsePacket();
   if (packetSize) 
@@ -103,6 +105,8 @@ void waitForPCIP() {
     }
   }
 }
+
+
 
 void waitForCheckMessage() 
 {
