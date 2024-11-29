@@ -28,14 +28,15 @@ void loop() {
   if (!ipAcquired) 
     waitForPCIP();
   else
+  {
     sendSensorData();
     waitForCheckMessage();
+  }
 }
 
 void sendSensorData()
 {
   int shockValue = digitalRead(shockSensorPin);
-
   if (shockValue == HIGH) {
     // 충격 감지 시 데이터 전송
     char buffer[256];
