@@ -1,6 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <Wire.h>
+#include "DFRobot_BMI160.h"
+#include <Adafruit_HMC5883_U.h>
 
 const char* ssid = "Gukgung_Wifi";
 const char* password = "love00007";
@@ -14,6 +16,9 @@ const int udpPort = 12346;
 
 bool ipAcquired = false;
 
+DFRobot_BMI160 bmi160;
+Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(67890);
+
 void setup() {
   Serial.begin(115200);
 
@@ -21,7 +26,7 @@ void setup() {
   
   Wire.begin(D2, D1);
   
-  initializeMPU6050();
+  initBmiHMC();
   
   Udp.begin(udpPort);
 
@@ -57,33 +62,35 @@ void setWiFiConnect()
   Serial.println("Connected to WiFi");
 }
 
-void initializeMPU6050() {
-  // Power Management
-  Wire.beginTransmission(0x68);
-  Wire.write(0x6B);
-  Wire.write(0);
-  Wire.endTransmission();
+void initBmiHMC() {
+  int8_t initStatus = bmi160.I2cInit(0x69);
+    if (initStatus != BMI160_OK) {
+        Serial.print("BMI160 initialization failed! Error code: ");
+        Serial.println(initStatus);
+        while (1);
+    }
 
-  // Register 26
-  for(uint8_t i = 2; i <= 7; i++)
-  {
-    Wire.beginTransmission(0x68);
-    Wire.write(26);
-    Wire.write(i << 3 | 0x03);
-    Wire.endTransmission();
-  }
+    Serial.println("BMI160 initialized successfully!");
 
-  // Register 27
-  Wire.beginTransmission(0x68);
-  Wire.write(27);
-  Wire.write(3 << 3);
-  Wire.endTransmission();
+    delay(100);
+    
+    int16_t dummyData[3];
+    if (bmi160.getAccelData(dummyData) != BMI160_OK || bmi160.getGyroData(dummyData) != BMI160_OK) {
+        Serial.println("Sensor is not responding! Retrying...");
+        delay(500);
+        bmi160.I2cInit(0x69);
+    }
 
-  // Register 28
-  Wire.beginTransmission(0x68);
-  Wire.write(28);
-  Wire.write(0);
-  Wire.endTransmission();
+    Serial.println("Reading accelerometer and gyroscope data...");
+
+     if (!mag.begin()) {
+        Serial.println("HMC5883L not detected! Check wiring.");
+        while (1);
+    }
+
+    Serial.println("HMC5883L initialized successfully!");
+
+    Serial.println("Reading sensor data...");
 }
 
 
@@ -142,26 +149,30 @@ void waitForCheckMessage()
 
 
 void sendSensorData() {
-  uint8_t i;
-  static int16_t acc_raw[3]={0,}, gyro_raw[3]={0,};
-  // Get Accel
-  Wire.beginTransmission(0x68);
-  Wire.write(59);
-  Wire.endTransmission();
-  Wire.requestFrom(0x68, 6);
-  for(i = 0; i < 3; i++) acc_raw[i] = (Wire.read() << 8) | Wire.read();
-  
-  // Get Gyro
-  Wire.beginTransmission(0x68);
-  Wire.write(67);
-  Wire.endTransmission();
-  Wire.requestFrom(0x68, 6);
-  for(i = 0; i < 3; i++) gyro_raw[i] = (Wire.read() << 8) | Wire.read();
+  int16_t acc_raw[3];
+  int16_t gyro_raw[3];
+
+  if (bmi160.getAccelData(acc_raw) != BMI160_OK) {
+        Serial.println("Failed to read accelerometer data!");
+    }
+  if (bmi160.getGyroData(gyro_raw) != BMI160_OK) {
+        Serial.println("Failed to read gyroscope data!");
+    }
+
+   // HMC5883L 데이터 읽기
+   sensors_event_t event;
+   mag.getEvent(&event);
+
+   // 방위각(Yaw) 계산
+   // float heading = atan2(event.magnetic.y, event.magnetic.x);
+   // if (heading < 0) heading += 2 * PI;
+   // float headingDegrees = heading * 180 / PI;
 
   char str[256];
-  snprintf(str, sizeof(str), "Accel: %d, %d, %d, Gyro: %d, %d, %d",
+  snprintf(str, sizeof(str), "Accel: %d, %d, %d, Gyro: %d, %d, %d, Mag: %d, %d",
   acc_raw[0], acc_raw[1], acc_raw[2],
-  gyro_raw[0], gyro_raw[1], gyro_raw[2]);
+  gyro_raw[0], gyro_raw[1], gyro_raw[2],
+  (int16_t) event.magnetic.x, (int16_t) event.magnetic.y);
   
   Serial.println(str);
 

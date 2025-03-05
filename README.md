@@ -1,4 +1,4 @@
-# VRKoeanArchery_Arduino
+# XRKoeanArchery_Arduino
 Capstone Design - Kyung Hee University SWCON
 
 ## 국궁 실내 습사 프로젝트
